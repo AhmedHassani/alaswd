@@ -1,24 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="dark">
 <head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
-    <title> {% block title %} {% endblock %} </title>
-
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" href="favicon.ico">
+    <link href="/static/style.css" rel="stylesheet">
 </head>
+<body class="dark:bg-dark">
+    {% include 'pages/header.html' %}
+<nav>
+    <!-- navigation menu here -->
+</nav>
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+    <!-- ===== Footer Start ===== -->
+    {% include 'pages/footer.html' %}
+    <!-- ===== Footer End  ===== -->
+    <!-- ====== Back To Top Start ===== -->
+    <a
+      href="javascript:void(0)"
+      class="hover:shadow-signUp back-to-top fixed bottom-8 right-8 left-auto z-[999] hidden h-10 w-10 items-center justify-center rounded-sm bg-primary text-white shadow-md transition"
+    >
+      <span
+        class="mt-[6px] h-3 w-3 rotate-45 border-t border-l border-white"
+      ></span>
+    </a>
+    <!-- ====== Back To Top End ===== -->
+    <script>
+      // section menu active
+      function onScroll(event) {
+        const sections = document.querySelectorAll(".menu-scroll");
+        const scrollPos =
+          window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop;
 
-<body>
+        for (let i = 0; i < sections.length; i++) {
+          const currLink = sections[i];
+          const val = currLink.getAttribute("href");
+          const refElement = document.querySelector(val);
+          const scrollTopMinus = scrollPos + 73;
+          if (
+            refElement.offsetTop <= scrollTopMinus &&
+            refElement.offsetTop + refElement.offsetHeight > scrollTopMinus
+          ) {
+            document.querySelector(".menu-scroll").classList.remove("active");
+            currLink.classList.add("active");
+          } else {
+            currLink.classList.remove("active");
+          }
+        }
+      }
 
-    {% block body %} {% endblock %}
+      window.document.addEventListener("scroll", onScroll);
+      // ==== About Tabs
+      const tabButtons = document.querySelectorAll(".tabButtons button");
+      const tabPanels = document.querySelectorAll(".tabPanel");
 
+      function showPanel(panelIndex) {
+        tabButtons.forEach(function (node) {
+          node.classList.remove(
+            "text-primary",
+            "border-primary",
+            "dark:border-primary"
+          );
+        });
+        tabButtons[panelIndex].classList.add(
+          "text-primary",
+          "dark:text-white",
+          "border-primary",
+          "dark:border-primary"
+        );
+        tabPanels.forEach(function (node) {
+          node.style.display = "none";
+        });
+        tabPanels[panelIndex].style.display = "flex";
+      }
+      showPanel(0);
+    </script>
+  <script defer src="/static/bundle.js"></script>
 </body>
-
 </html>

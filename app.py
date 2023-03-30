@@ -1,68 +1,126 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_sqlalchemy import SQLAlchemy 
-import os
+from model.model import *
 
 app = Flask(__name__)
 app.secret_key = "Secret Key"
 
-path = os.path.abspath( os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + os.path.join(path , 'database.sqlite')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-
-class Crud(db.Model):
-    id = db.Column(db.Integer , primary_key = True)
-    name = db.Column(db.String(100))
-    email = db.Column(db.String(100))
-    phone = db.Column(db.String(100))
-
-    def __init__(self, name, email, phone):
-        self.name = name
-        self.email = email
-        self.phone = phone
-    
+lng = "en"
 
 
 @app.route('/')
 def index():
-    all_data = Crud.query.all()
-    return render_template("index.html", all_data = all_data)
+    if lng=="en":
+        return render_template("home.html",
+                               header=header_en,
+                               hero=hero_en,
+                               lng=lng,
+                               footer=footer_en,
+                               service=service_en,
+                               prodcuts=prodcuts_en,
+                               team=team_en,
+                               about=about_en
+                               )
+    else:
+        return render_template("home.html",
+                               header=header_ar,
+                               hero=hero_ar,
+                               lng=lng,
+                               footer=footer_ar,
+                               service=service_ar,
+                               prodcuts=prodcuts_ar,
+                               team=team_ar,
+                               about=about_ar
+                               )
 
-@app.route('/insert', methods = ['POST'])
-def insert():
-    if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        phone = request.form['phone']
 
-        my_data = Crud(name, email, phone)
-        db.session.add(my_data)
-        db.session.commit()
 
-        flash("Employee Inserted Successfully")
-        return redirect(url_for('index'))
+@app.route('/projects')
+def projects():
+    if lng=="en":
+        return render_template("projects_view.html",
+                               header=header_en,
+                               hero=hero_en,
+                               lng=lng,
+                               footer=footer_en,
+                               service=service_en,
+                               prodcuts=prodcuts_en,
+                               team=team_en,
+                               about=about_en
+                               )
+    else:
+        return render_template("projects_view.html",
+                               header=header_ar,
+                               hero=hero_ar,
+                               lng=lng,
+                               footer=footer_ar,
+                               service=service_ar,
+                               prodcuts=prodcuts_ar,
+                               team=team_ar,
+                               about=about_ar
+                               )
+@app.route('/booking')
+def booking():
+    if lng=="en":
+        return render_template("booking_view.html",
+                               header=header_en,
+                               hero=hero_en,
+                               lng=lng,
+                               footer=footer_en,
+                               service=service_en,
+                               prodcuts=prodcuts_en,
+                               team=team_en,
+                               about=about_en,
+                               consultation=consultation_en
+                               )
+    else:
+        return render_template("booking_view.html",
+                               header=header_ar,
+                               hero=hero_ar,
+                               lng=lng,
+                               footer=footer_ar,
+                               service=service_ar,
+                               prodcuts=prodcuts_ar,
+                               team=team_ar,
+                               about=about_ar,
+                               consultation=consultation_ar
+                               )
+@app.route('/jobs')
+def jobs():
+    if lng=="en":
+        return render_template("jobs_view.html",
+                               header=header_en,
+                               hero=hero_en,
+                               lng=lng,
+                               footer=footer_en,
+                               service=service_en,
+                               prodcuts=prodcuts_en,
+                               team=team_en,
+                               about=about_en
+                               )
+    else:
+        return render_template("jobs_view.html",
+                               header=header_ar,
+                               hero=hero_ar,
+                               lng=lng,
+                               footer=footer_ar,
+                               service=service_ar,
+                               prodcuts=prodcuts_ar,
+                               team=team_ar,
+                               about=about_ar
+                               )
 
-@app.route('/update', methods = ['POST'])
-def update():
-    if request.method == "POST":
-        my_date = Crud.query.get(request.form.get('id'))
-        my_date.name = request.form['name']
-        my_date.email = request.form['email']
-        my_date.phone = request.form['phone']
 
-        db.session.commit()
-        flash("Employee Updated Successfully")
-        return redirect(url_for('index'))
 
-@app.route('/delete/<id>/')
-def delete(id):
-    my_data = Crud.query.get(id)
-    db.session.delete(my_data)
-    db.session.commit()
+@app.route('/change/<lang>')
+def change_language(lang):
+    global lng
+    if lang=='en':
+        lng = 'en'
+    else:
+        lng = 'ar'
+    return redirect("/")
 
-    flash("Employee Data Deleted Successfully")
-    return redirect(url_for('index'))
+
 
 if __name__ == "__main__":
     app.run(debug = True)
